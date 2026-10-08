@@ -596,15 +596,23 @@ function msg(id, text, ok){
 }
 
 /* ---------- AUTH ---------- */
-function doLogin(){
-  var u = document.getElementById('u').value, p = document.getElementById('p').value;
-  if(!u || !p){ msg('loginMsg','Enter username and password', false); return; }
-  google.script.run.withSuccessHandler(function(r){
-    if(!r.ok){ msg('loginMsg', r.msg, false); return; }
-    onLoginSuccess(r);
-  }).withFailureHandler(function(e){
-    msg('loginMsg','Error: '+e.message, false);
-  }).login(u, p);
+const API_URL = 'https://script.google.com/macros/s/AKfycbxxewDGp97aOZF-3VrcDQpGu3Y-ChHsIHZPsvds48STeE7NbeHmsQDKCeMOpmB2SYO-/exec';
+
+async function doLogin() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'login', username, password })
+    });
+    const result = await res.json();
+    onLogin(result);
+  } catch (err) {
+    onError(err);
+  }
 }
 
 // Shared by both password login and OTP login once a valid session token comes back.
