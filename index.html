@@ -599,8 +599,8 @@ function msg(id, text, ok){
 const API_URL = 'https://script.google.com/macros/s/AKfycbxxewDGp97aOZF-3VrcDQpGu3Y-ChHsIHZPsvds48STeE7NbeHmsQDKCeMOpmB2SYO-/exec';
 
 async function doLogin() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+  const username = document.getElementById('u').value;
+  const password = document.getElementById('p').value;
 
   try {
     const res = await fetch(API_URL, {
