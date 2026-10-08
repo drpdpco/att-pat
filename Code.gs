@@ -8,7 +8,7 @@
 
 // ====== CONFIG ======
 // You can paste EITHER the bare Sheet ID, OR the full Sheet URL — both work.
-const SPREADSHEET_ID = '1w2q_9AjVCacdx9IS_K-Ul9o0m721HKwv34GCSkPZ3QE'; // <-- paste the Sheet ID or URL
+const SPREADSHEET_ID = 'https://docs.google.com/spreadsheets/d/1A4Qif7trbnMdqRug_KX18peQ9ycf804CcVR-yQ4YKAY/edit?gid=1113897459#gid=1113897459'; // <-- paste the Sheet ID or URL
 const APP_TITLE = 'Student Management System - Dr. P. D. Polytechnic, Amravati';
 
 // Logo (base64) used in the report-card PDF header.
