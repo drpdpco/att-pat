@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+:root{
+  --bg:#0A0E1B;
+  --panel:#131A2E;
+  --panel2:#1B2440;
+  --line:#28325096;
+  --line-solid:#2A3455;
+  --violet:#8B6BFF;
+  --violet2:#6D4FE0;
+  --cyan:#2FE0F0;
+  --text:#E9ECFB;
+  --muted:#8D97BC;
+  --green:#34D399;
+  --red:#FB7185;
+  --amber:#FBBF24;
+  --trace: linear-gradient(90deg, var(--violet), var(--cyan));
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',Segoe UI,Arial,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;font-family:var(--font-body);-webkit-tap-highlight-color:transparent;}
+html{background:var(--bg);}
+body{
+  margin:0;color:var(--text);
+  background:
+    radial-gradient(circle at 1px 1px, #2A345566 1px, transparent 1.6px) 0 0/22px 22px,
+    radial-gradient(1200px 500px at 50% -10%, #23305a55, transparent),
+    var(--bg);
+  min-height:100vh;
+}
+h1,h2{font-family:var(--font-display);letter-spacing:.2px;}
+::selection{background:var(--violet2);color:#fff;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:6px;}
+
+/* ---- header ---- */
+header{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,#111834,#0D1226);
+  color:#fff;padding:14px 16px 12px;display:flex;flex-direction:column;
+  align-items:center;text-align:center;gap:4px;
+  border-bottom:1px solid var(--line-solid);
+  box-shadow:0 1px 0 0 rgba(0,0,0,.4);
+}
+header::after{content:'';display:block;height:2px;width:100%;position:absolute;left:0;bottom:-1px;background:var(--trace);}
+header{position:sticky;}
+header img,header .brand img{
+  height:52px;width:52px;border-radius:50%;background:#fff;padding:2px;object-fit:contain;
+  box-shadow:0 0 0 3px #0A0E1B, 0 0 0 5px var(--violet2), 0 0 18px 2px #6D4FE066;
+  vertical-align:middle;
+}
+header .ttl,header h1{font-family:var(--font-display);font-size:16px;font-weight:700;margin:6px 0 0;line-height:1.25;}
+header .dept{font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--cyan);opacity:.95;margin-top:1px;}
+header .who{font-size:11.5px;color:var(--muted);margin-top:2px;font-family:var(--font-mono);}
+header #logoutBtn{width:auto;margin:8px auto 0;background:transparent;color:#fff;border:1px solid #ffffff40;
+  padding:6px 14px;font-size:12.5px;border-radius:20px;}
+header #logoutBtn:hover{background:#ffffff1a;}
+
+/* ---- layout ---- */
+.wrap{max-width:840px;margin:0 auto;padding:14px;}
+.card{
+  background:linear-gradient(180deg,var(--panel),#111730);
+  border:1px solid var(--line-solid);border-radius:14px;padding:16px;margin-bottom:14px;
+  box-shadow:0 8px 24px -12px #00000080;position:relative;overflow:hidden;
+}
+.card::before{content:'';position:absolute;left:0;top:0;height:3px;width:100%;background:var(--trace);opacity:.55;}
+h2{font-size:15px;margin:2px 0 12px;color:var(--text);font-weight:700;display:flex;align-items:center;gap:8px;}
+h2::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px 1px var(--cyan);}
+
+/* ---- forms ---- */
+label{display:block;font-size:12.5px;margin:10px 0 4px;font-weight:600;color:var(--muted);letter-spacing:.2px;}
+input,select{
+  width:100%;padding:10px 11px;border:1px solid var(--line-solid);border-radius:9px;
+  font-size:14.5px;background:#0E1428;color:var(--text);
+}
+input::placeholder{color:#5C6890;}
+input:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px #2FE0F02a;}
+
+button{
+  background:var(--trace);color:#0A0E1B;border:0;padding:11px 16px;
+  border-radius:9px;font-size:14.5px;font-weight:700;cursor:pointer;width:100%;
+  transition:transform .08s ease, box-shadow .15s ease;
+}
+button:hover{box-shadow:0 0 0 3px #8B6BFF33, 0 6px 18px -6px #6D4FE0aa;}
+button:active{transform:translateY(1px);}
+button.sec{background:transparent;color:var(--cyan);border:1px solid var(--line-solid);}
+button.sec:hover{border-color:var(--cyan);box-shadow:0 0 0 3px #2FE0F022;}
+button.del{background:linear-gradient(90deg,#FB7185,#F43F5E);color:#1a0509;}
+button.small{width:auto;padding:8px 12px;font-size:12.5px;}
+
+/* ---- messages ---- */
+.msg{padding:10px 12px;border-radius:9px;font-size:13px;margin:8px 0;display:none;border:1px solid transparent;}
+.msg.err{background:#3A1420;color:#FFB4C0;border-color:#5E2233;display:block;}
+.msg.ok{background:#0F3326;color:#7CF0BE;border-color:#1E5A3F;display:block;}
+.hide{display:none !important;}
+.center{text-align:center;}
+.hint,.small-note{font-size:12px;color:var(--muted);}
+
+/* ---- tables ---- */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{border:1px solid var(--line-solid);padding:7px;text-align:left;}
+th{background:#171F3B;color:var(--cyan);font-family:var(--font-mono);font-size:11.5px;
+   text-transform:uppercase;letter-spacing:.4px;}
+tr:nth-child(even) td{background:#0F1530;}
+table.reg{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--font-mono);}
+table.reg th,table.reg td{border:1px solid var(--line-solid);padding:4px;text-align:center;}
+table.reg th{background:#171F3B;color:var(--cyan);}
+table.reg td.nm{text-align:left;font-family:var(--font-body);}
+.low{background:#3A1420 !important;color:#FF9FB0;font-weight:700;}
+
+/* ---- tabs ---- */
+.tabs,.tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tabs button,.tabbar button{background:#131A2E;color:var(--muted);border:1px solid var(--line-solid);
+  font-weight:600;width:auto;}
+.tabs button.active,.tabbar button.active{background:var(--trace);color:#0A0E1B;border-color:transparent;}
+
+/* ---- misc rows ---- */
+.row{display:flex;gap:12px;flex-wrap:wrap;}
+.row>div{flex:1;min-width:150px;}
+
+/* ---- attendance rows ---- */
+.stu{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--line-solid);
+     border-radius:11px;margin-bottom:8px;cursor:pointer;user-select:none;background:var(--panel2);transition:box-shadow .12s;}
+.stu .nm{font-size:14px;}
+.stu .rl{display:inline-block;min-width:26px;font-weight:700;color:var(--muted);margin-right:8px;font-family:var(--font-mono);}
+.stu .pill{font-size:12.5px;font-weight:700;padding:5px 14px;border-radius:20px;min-width:74px;text-align:center;font-family:var(--font-mono);}
+.stu.present{background:#0F2A22;border-color:#1E5A3F;}
+.stu.present .pill{background:var(--green);color:#052B1D;box-shadow:0 0 12px -2px #34D39988;}
+.stu.absent{background:#341620;border-color:#5E2233;}
+.stu.absent .pill{background:var(--red);color:#3A0510;box-shadow:0 0 12px -2px #FB718588;}
+.stu.leave{background:#332A0F;border-color:#5E4E1E;}
+.stu.leave .pill{background:var(--amber);color:#332000;box-shadow:0 0 12px -2px #FBBF2488;}
+.summary{font-size:13px;color:var(--muted);margin:6px 0 2px;font-weight:600;}
+.sessrow{display:flex;justify-content:space-between;align-items:center;padding:10px;border:1px solid var(--line-solid);
+  border-radius:9px;margin-bottom:6px;font-size:13px;background:var(--panel2);}
+
+/* ---- home menu ---- */
+.homeMenu{max-width:520px;margin:30px auto;display:flex;flex-direction:column;gap:16px;}
+.homeBtn{display:flex;align-items:center;gap:14px;padding:22px;border-radius:16px;border:1px solid var(--line-solid);
+  background:linear-gradient(150deg,var(--panel),#111730);cursor:pointer;font-family:var(--font-display);
+  font-size:17px;font-weight:700;color:var(--text);box-shadow:0 10px 30px -16px #000a;transition:box-shadow .15s,transform .1s;}
+.homeBtn:hover{box-shadow:0 0 0 1px var(--cyan), 0 14px 34px -14px #6D4FE0aa;transform:translateY(-1px);}
+.homeBtn .ic{font-size:26px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+  border-radius:14px;background:radial-gradient(circle at 30% 30%,#8B6BFF44,#2FE0F022);flex:none;}
+.backBar{margin:10px 0;}
+.backBar button{background:#131A2E;color:var(--cyan);border:1px solid var(--line-solid);padding:7px 14px;
+  border-radius:8px;font-size:13px;cursor:pointer;width:auto;font-weight:600;}
+</style>
+
+</head>
+<body>
+<datalist id="knownBatches"></datalist>
+<header>
+  <img id="hdrLogo" style="display:block;margin:0 auto;" src="data:image/jpeg;base64,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" style="height:54px;width:54px;border-radius:50%;background:#fff;padding:2px;object-fit:contain;">
+  <div style="font-size:16px;font-weight:700;line-height:1.2;">Dr.Panjabrao Deshmukh Polytechnic, Amravati</div>
+  <div style="font-size:12px;font-weight:600;opacity:.9;">Computer Engineering Dept</div>
+  <div style="font-size:11px;color:#FBBF24;margin-top:1px;">This portal is used to see the Attendance and PA Test marks</div>
+  <div style="font-size:11px;opacity:.8;" id="whoBox"></div>
+  <button id="logoutBtn" class="hide" onclick="doLogout()" style="width:auto;margin:2px auto 0;padding:7px 14px;font-size:13px;display:block;">Logout</button>
+</header>
+<div class="wrap">
+<div id="loginView" class="card" style="max-width:400px;margin:40px auto;">
+    <h2 class="center">Login</h2>
+    <p class="center" style="font-size:13px;color:#2FE0F0;font-weight:600;margin:-4px 0 12px;">Students must login with Enrollment Number</p>
+    <div id="loginMsg" class="msg"></div>
+    <label>Username</label>
+    <input id="u" placeholder="admin OR enrollment no">
+    <label>Password</label>
+    <input id="p" type="password" placeholder="password">
+    <div style="margin-top:14px;"><button onclick="doLogin()" style="width:100%">Login</button></div>
+    <p class="center" style="margin-top:12px;">
+      <a href="javascript:void(0)" onclick="showOtpLogin()" style="font-size:13px;color:#2FE0F0;">Student? Login with Mobile OTP instead</a>
+    </p>
+  </div>
+
+  <div id="otpLoginView" class="card hide" style="max-width:400px;margin:40px auto;">
+    <h2 class="center">Login with Mobile OTP</h2>
+    <div id="otpMsg" class="msg"></div>
+
+    <div id="otpStep1">
+      <label>Registered Mobile Number</label>
+      <input id="otpMobile" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+      <div style="margin-top:14px;"><button id="otpSendBtn" onclick="sendOtp()" style="width:100%">Send OTP</button></div>
+    </div>
+
+    <div id="otpStep2" class="hide">
+      <label>Enter OTP</label>
+      <input id="otpCode" placeholder="6-digit code" maxlength="6" inputmode="numeric">
+      <div style="margin-top:14px;"><button onclick="verifyOtpAndLogin()" style="width:100%">Verify &amp; Login</button></div>
+      <p class="center small" style="margin-top:10px;">
+        <a href="javascript:void(0)" onclick="sendOtp(true)" id="otpResendLink">Resend OTP</a>
+      </p>
+    </div>
+
+    <p class="center" style="margin-top:6px;">
+      <a href="javascript:void(0)" onclick="showPasswordLogin()" style="font-size:13px;color:#2FE0F0;">Back to Username/Password login</a>
+    </p>
+  </div>
+<div id="homeView" class="hide">
+  <div class="homeMenu">
+    <div style="text-align:center;font-size:15px;color:#8D97BC;">Choose a module</div>
+    <div class="homeBtn" onclick="openModule('attendance')"><span class="ic">📋</span> Student Attendance</div>
+    <div class="homeBtn" id="marksHomeBtn" onclick="openModule('marks')"><span class="ic">📝</span> PA Test Marks &amp; Report Cards</div>
+  </div>
+</div>
+<div id="studentView" class="hide">
+  <div class="card"><h2 style="margin-top:0;">My Attendance</h2><div id="myAttArea"></div></div>
+  <div class="card"><h2 style="margin-top:0;">My Report Card</h2><div id="myCardArea"></div></div>
+</div>
+<div id="marksModule" class="hide"><div class="backBar"><button onclick="goHome()">⬅ Back to menu</button></div><div id="marksAdminView" class="hide">
+    <div class="tabs">
+      <button class="active" onclick="showTab('students', this)">Students (Bulk Import)</button>
+      <button onclick="showTab('report', this)">Result PDF</button>
+    </div>
+
+    <div id="tab-students" class="card">
+      <h2>Bulk Import (class marks sheet)</h2>
+      <p class="hint">Upload the Excel / Google Sheet (.xlsx or .csv). Header row must be:
+        <b>Roll No, Enrollment no, Name, &lt;subject codes…&gt;</b> (e.g. OOP, DSU, DMS, DTE).
+        Students and subjects are created automatically; any marks in the cells are saved.</p>
+      <div class="row">
+        <div><label>Class for this sheet</label><select id="imp_cl"></select></div>
+        <div><label>Test</label>
+          <select id="imp_ex">
+            <option value="PAT-1">Progressive Theory Test - 1 (PAT-1)</option>
+            <option value="PAT-2">Progressive Theory Test - 2 (PAT-2)</option>
+          </select>
+        </div>
+      </div>
+      <label style="margin-top:8px;">Upload .xlsx / .csv file</label>
+      <input type="file" id="imp_file" accept=".xlsx,.xls,.csv" onchange="importFromFile()">
+      <div id="impMsg" class="msg"></div>
+
+      <p class="hint" style="margin-top:14px;">New class not in the list?
+        <button class="sec" style="padding:6px 12px;font-size:13px;" onclick="quickAddClass()">+ Add Class</button>
+      </p>
+
+      <h2 style="margin-top:24px;">Add a Student Manually</h2>
+      <p class="hint">Add one student to a class without uploading a file. A login
+        (username = password = enrollment) is created automatically.</p>
+      <div class="row">
+        <div><label>Roll No</label><input id="ms_roll" type="text" placeholder="e.g. 67"></div>
+        <div><label>Enrollment No</label><input id="ms_enr" type="text" placeholder="enrollment"></div>
+      </div>
+      <label>Name</label>
+      <input id="ms_name" type="text" placeholder="Student full name">
+      <div class="row" style="margin-top:6px;align-items:flex-end;">
+        <div style="max-width:220px;"><label>Class</label><select id="ms_cl"></select></div>
+        <div style="flex:0 0 auto;"><button onclick="marksAddStudent()">Add Student</button></div>
+      </div>
+      <div id="msAddMsg" class="msg"></div>
+
+      <h2 style="margin-top:24px;">Student List</h2>
+      <div class="row" style="align-items:flex-end;">
+        <div style="max-width:220px;">
+          <label>Filter by class</label>
+          <select id="flt_cl" onchange="loadStudents()"><option value="">All classes</option></select>
+        </div>
+        <div style="flex:0 0 auto;">
+          <button class="del" onclick="deleteSelected()">Delete selected</button>
+        </div>
+        <div style="flex:0 0 auto;">
+          <button class="del" onclick="deleteWholeClass()">Delete entire class</button>
+        </div>
+      </div>
+      <div id="stuMsg2" class="msg"></div>
+      <div id="stuTable" style="margin-top:10px;"></div>
+    </div>
+
+    <div id="tab-report" class="card hide">
+      <h2>Generate Report Cards (PDF)</h2>
+      <p class="hint">One PDF for the whole class, each student's report card on its own page,
+        in the institute's standard format.</p>
+      <div class="row">
+        <div><label>Class</label><select id="rp_cl"></select></div>
+      </div>
+      <p class="hint">The report card always shows both PAT-1 and PAT-2 marks, plus their average, per subject — no need to pick one test.</p>
+      <div class="row">
+        <div><label>Semester label (printed on card)</label><input id="rp_sem" placeholder="e.g. Third (CO-3K)"></div>
+        <div><label>Season</label>
+          <select id="rp_season">
+            <option value="">(none)</option>
+            <option value="Winter">Winter</option>
+            <option value="Summer">Summer</option>
+          </select>
+        </div>
+        <div><label>Academic Year</label><input id="rp_ay" placeholder="e.g. 2026"></div>
+      </div>
+      <div style="margin-top:12px;"><button onclick="genReport()">Generate Report Cards</button></div>
+      <div id="rpMsg" class="msg"></div>
+    </div>
+
+  </div></div>
+<div id="attModule" class="hide"><div class="backBar"><button onclick="goHome()">⬅ Back to menu</button></div><div id="attAppView" class="hide">
+    <div class="tabbar">
+      <button id="tabTake" class="active" onclick="att_showTab('take')">Take Attendance</button>
+      <button id="tabReport" onclick="att_showTab('report')">Reports</button>
+      <button id="tabEdit" onclick="att_showTab('edit')">Past Sessions</button>
+      <button id="tabStudents" onclick="att_showTab('students')">Students &amp; Batches</button>
+      <button id="tabSubjects" onclick="att_showTab('subjects')">Subjects</button>
+      <button id="tabLecturers" onclick="att_showTab('lecturers')">Lecturers</button>
+    </div>
+
+    <!-- TAKE -->
+    <div id="takeTab">
+      <div class="card">
+        <h2>New Attendance</h2>
+        <label>Subject</label>
+        <select id="t_sub" onchange="att_onSubChange()"></select>
+
+        <div id="planPickerWrap" class="hide" style="margin-top:12px;">
+          <label>Planned Dates for this Subject</label>
+          <div id="planPicker" style="max-height:240px;overflow-y:auto;"></div>
+          <p class="small-note" style="margin-top:2px;">Tap "Take Attendance" on a planned date to auto-fill it below, or enter a date manually underneath for an extra/make-up lecture.</p>
+        </div>
+
+        <div class="row">
+          <div><label>Date</label><input type="date" id="t_date" onchange="ATT_PLAN_ID=null;"></div>
+          <div><label>Time</label><input type="time" id="t_time" onchange="ATT_PLAN_ID=null;"></div>
+        </div>
+        <div id="batchWrap" class="hide">
+          <label>Batch</label>
+          <input id="t_batch" list="knownBatches" placeholder="e.g. A" onchange="ATT_PLAN_ID=null;att_loadRoster()">
+        </div>
+        <div id="takeMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Plan Lecture Dates (Timetable)</h2>
+        <p class="hint">Fill in all the planned lecture dates for a subject in advance, as per the timetable. They'll then show up as pickable options above when you go to take attendance.</p>
+        <label>Subject</label>
+        <select id="p_sub" onchange="att_loadPlanList()"></select>
+
+        <div id="p_bulkWrap" style="margin-top:14px;padding:12px;border:1px solid var(--line-solid);border-radius:10px;background:var(--panel2);">
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px;">Bulk-generate by weekday <span class="hint">(admin only)</span></div>
+          <label>Repeat on (each day can have its own lecture time)</label>
+          <div id="p_weekdays" style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="1" style="width:auto;" onchange="att_toggleDayTime(this)">Mon</label>
+              <input type="time" class="pwdTime" data-day="1" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="2" style="width:auto;" onchange="att_toggleDayTime(this)">Tue</label>
+              <input type="time" class="pwdTime" data-day="2" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="3" style="width:auto;" onchange="att_toggleDayTime(this)">Wed</label>
+              <input type="time" class="pwdTime" data-day="3" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="4" style="width:auto;" onchange="att_toggleDayTime(this)">Thu</label>
+              <input type="time" class="pwdTime" data-day="4" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="5" style="width:auto;" onchange="att_toggleDayTime(this)">Fri</label>
+              <input type="time" class="pwdTime" data-day="5" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="6" style="width:auto;" onchange="att_toggleDayTime(this)">Sat</label>
+              <input type="time" class="pwdTime" data-day="6" disabled style="max-width:150px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:46px;"><input type="checkbox" class="pwd" value="0" style="width:auto;" onchange="att_toggleDayTime(this)">Sun</label>
+              <input type="time" class="pwdTime" data-day="0" disabled style="max-width:150px;">
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px;">
+            <div><label>From</label><input type="date" id="p_bulkFrom"></div>
+            <div><label>To</label><input type="date" id="p_bulkTo"></div>
+          </div>
+          <div id="p_bulkBatchWrap" class="hide"><label>Batch</label>
+            <input id="p_bulkBatch" list="knownBatches" placeholder="e.g. A">
+          </div>
+          <div style="margin-top:10px;"><button class="small" style="width:auto;" onclick="att_bulkPlan()">Generate Plan</button></div>
+        </div>
+
+        <div style="margin-top:14px;padding:12px;border:1px solid var(--line-solid);border-radius:10px;background:var(--panel2);">
+          <div style="font-weight:700;font-size:13px;margin-bottom:8px;">Add a single date</div>
+          <div class="row">
+            <div><label>Date</label><input type="date" id="p_oneDate"></div>
+            <div><label>Time</label><input type="time" id="p_oneTime"></div>
+          </div>
+          <div id="p_oneBatchWrap" class="hide"><label>Batch</label>
+            <input id="p_oneBatch" list="knownBatches" placeholder="e.g. A">
+          </div>
+          <div style="margin-top:10px;"><button class="small" style="width:auto;" onclick="att_addOnePlan()">Add Date</button></div>
+        </div>
+
+        <div id="planMsg" class="msg"></div>
+        <div style="font-weight:700;font-size:13px;margin:14px 0 6px;">Planned dates for this subject</div>
+        <div id="planList" style="max-height:320px;overflow-y:auto;"><p class="hint">Select a subject above.</p></div>
+      </div>
+
+      <div class="card" id="rosterCard" style="display:none;">
+        <div class="summary" id="rosterSummary"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <button class="sec small" onclick="att_markAll('P')">All Present</button>
+          <button class="sec small" onclick="att_markAll('A')">All Absent</button>
+          <button class="sec small" onclick="att_markAll('L')">All Leave</button>
+        </div>
+        <div id="roster"></div>
+        <label style="margin-top:12px;">Topic Conducted</label>
+        <input id="t_topic" placeholder="Topic taught in this session" maxlength="300">
+        <div style="margin-top:12px;"><button onclick="att_saveAtt()">Save Attendance</button></div>
+        <div id="saveMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- REPORT -->
+    <div id="reportTab" class="hide">
+      <div class="card">
+        <h2>Reports</h2>
+        <label>Subject</label>
+        <select id="r_sub" onchange="att_onReportSubChange()"></select>
+        <div id="r_batchWrap" class="hide">
+          <label>Batch</label>
+          <select id="r_batch" onchange="att_previewReport()">
+            <option value="ALL">All batches (combined)</option>
+          </select>
+        </div>
+        <div class="row">
+          <div><label>From (optional)</label><input type="date" id="r_from"></div>
+          <div><label>To (optional)</label><input type="date" id="r_to"></div>
+        </div>
+        <label>Date columns per PDF page</label>
+        <input type="number" id="r_colsPerPage" value="10" min="4" max="20" style="max-width:120px;">
+        <p class="small-note" style="margin-top:2px;">If a date-block still looks too wide/narrow in the PDF, adjust this number and re-download — lower it if columns look cramped, raise it to fit more dates per page.</p>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+          <button onclick="att_previewReport()">Preview on screen</button>
+          <button class="sec" onclick="att_dlPdf(false)">Download PDF register</button>
+          <button class="sec" onclick="att_dlPdf(true)">Download PDF — Below 75% list</button>
+          <button class="sec" onclick="att_dlExcel()">Download Excel register</button>
+        </div>
+        <div id="reportMsg" class="msg"></div>
+      </div>
+      <div class="card" id="previewCard" style="display:none;">
+        <div id="previewArea" style="overflow-x:auto;"></div>
+      </div>
+    </div>
+
+    <!-- EDIT -->
+    <div id="editTab" class="hide">
+      <div class="card">
+        <h2>Past Sessions</h2>
+        <label>Filter by subject</label>
+        <select id="e_sub" onchange="att_loadSessions()"><option value="ALL">All subjects</option></select>
+        <div id="sessList" style="margin-top:10px;"></div>
+        <div id="editMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <div id="studentsTab" class="hide">
+      <div class="card">
+        <h2>Upload Student List</h2>
+        <p class="hint">Upload an Excel/CSV with columns <b>Roll No, Enrollment, Name</b> (an optional
+          <b>Batch</b> column of A/B/C is honoured for CO-5-K). Choose the class first — the upload
+          replaces the students of <b>that class only</b> and <b>does not affect any other class</b>.
+          A login (username = password = enrollment) is created for each student.</p>
+        <label>Class</label>
+        <select id="su_class" style="max-width:200px;"></select>
+        <div style="margin-top:8px;">
+          <input type="file" id="su_file" accept=".xlsx,.xls,.csv" onchange="att_uploadStudents()">
+        </div>
+        <div id="suMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Batch Setup (A / B / C)</h2>
+        <p class="hint">Batches are decided by two roll-number cutoffs. Batch A = roll 1 to the first
+          cutoff, B = up to the second cutoff, C = the rest. Set them and click Apply to auto-assign;
+          you can then move individual students below.</p>
+        <div class="row">
+          <div><label>A ends at roll</label><input type="number" id="cut_ab" min="1"></div>
+          <div><label>B ends at roll</label><input type="number" id="cut_bc" min="2"></div>
+          <div style="display:flex;align-items:flex-end;"><button onclick="att_applyCutoffs()">Apply &amp; auto-assign</button></div>
+        </div>
+        <p class="hint">Note: SPI attendance is <b>not</b> based on A/B/C — only the students you
+          tick below under <b>"SPI — Select Eligible Students"</b> take part in SPI sessions.</p>
+        <div id="cutMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>SPI &mdash; Select Eligible Students</h2>
+        <p class="hint">Seminar and Project Initiation Course (SPI) is taken by only a subset of the
+          whole class (e.g. 20 students), not everyone. Tick the students enrolled in SPI below and
+          Save. Only these students will show up when taking SPI attendance and in the SPI report —
+          everyone else, and every other subject, is unaffected.</p>
+        <div id="spiList" style="max-height:360px;overflow-y:auto;margin-top:8px;"><p class="hint">Loading...</p></div>
+        <div style="margin-top:10px;"><button onclick="att_saveSpiSelection()">Save SPI Selection</button></div>
+        <div id="spiMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Add a Student Manually</h2>
+        <p class="hint">Add one student to any class without re-uploading a file. A login
+          (username = password = enrollment) is created automatically.</p>
+        <div class="row">
+          <div><label>Roll No</label><input id="ns_roll" type="text" placeholder="e.g. 67"></div>
+          <div><label>Enrollment No</label><input id="ns_enr" type="text" placeholder="enrollment"></div>
+        </div>
+        <label>Name</label>
+        <input id="ns_name" type="text" placeholder="Student full name">
+        <div class="row" style="margin-top:6px;">
+          <div style="max-width:170px;"><label>Class</label>
+            <select id="ns_class" onchange="att_onAddClassChange()"></select>
+          </div>
+          <div style="max-width:170px;" id="ns_batch_wrap"><label>Batch (CO-5-K only)</label>
+            <select id="ns_batch"><option value="">Auto (by cutoff)</option><option>A</option><option>B</option><option>C</option></select>
+          </div>
+          <div style="display:flex;align-items:flex-end;"><button onclick="att_addStudent()">Add Student</button></div>
+        </div>
+        <div id="nsMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Students &amp; Batch Assignment</h2>
+        <p class="hint">Pick a class to view its students. Change any student's batch from the dropdown
+          (batches apply to CO-5-K only; a manual change is marked ★ and survives re-applying cutoffs).
+          Use <b>Edit</b> to change roll/name, <b>Remove</b> to delete a student (also removes their login).</p>
+        <label>Show class</label>
+        <select id="bl_class" style="max-width:200px;" onchange="att_loadBatchScreen()"></select>
+        <div id="batchList" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- SUBJECTS (admin only) -->
+    <div id="subjectsTab" class="hide">
+      <div class="card">
+        <h2>Add a Subject</h2>
+        <p class="hint">Define the subjects this app tracks attendance for. Subject Key is a short
+          unique code used internally (e.g. OSY-TH, OSY-PR) — use -TH for theory and -PR for practical.
+          <b>Class / Semester must match the class name exactly as students were uploaded</b> (e.g. CO-1-K or CO-5-K) —
+          that is how the app decides which students appear when this subject is selected.</p>
+        <div class="row">
+          <div><label>Subject Key</label><input id="as_key" placeholder="e.g. DBMS-TH"></div>
+          <div><label>Subject Name</label><input id="as_name" placeholder="e.g. Database Management"></div>
+        </div>
+        <div class="row">
+          <div><label>Subject Code</label><input id="as_code" placeholder="e.g. 315320"></div>
+          <div><label>Type</label>
+            <select id="as_type"><option value="TH">Theory (TH)</option><option value="PR">Practical (PR)</option></select>
+          </div>
+        </div>
+        <label>Class / Semester (must match the student class name)</label>
+        <input id="as_sem" placeholder="e.g. CO-1-K">
+        <div style="margin-top:10px;"><button onclick="att_addSubject()">Add Subject</button></div>
+        <div id="asMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Current Subjects</h2>
+        <div id="subjectList"><p class="hint">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- LECTURERS (admin only) -->
+    <div id="lecturersTab" class="hide">
+      <div class="card">
+        <h2>Add a Lecturer</h2>
+        <p class="hint">Create a login for another teacher. After creating it, tick which subjects they're
+          allotted to below — they'll only be able to take attendance and view/print reports for those
+          subjects. Everything else (Students &amp; Batches, PA Test Marks, other subjects) stays admin-only.</p>
+        <div class="row">
+          <div><label>Username</label><input id="lt_user" placeholder="e.g. teacher name or short id"></div>
+          <div><label>Password</label><input id="lt_pass" placeholder="set a password"></div>
+        </div>
+        <label>Full Name</label>
+        <input id="lt_name" placeholder="Lecturer's full name">
+        <div style="margin-top:10px;"><button onclick="att_addTeacher()">Create Lecturer</button></div>
+        <div id="ltMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Lecturers &amp; Subject Allotment</h2>
+        <div id="teacherList"><p class="hint">Loading...</p></div>
+      </div>
+    </div>
+
+  </div></div>
+</div>
+<script>
+
+var SESSION = null;
+
+function msg(id, text, ok){
+  var e = document.getElementById(id);
+  e.className = 'msg ' + (ok ? 'ok' : 'err');
+  e.textContent = text;
+}
+
+/* ---------- AUTH ---------- */
+function doLogin(){
+  var u = document.getElementById('u').value, p = document.getElementById('p').value;
+  if(!u || !p){ msg('loginMsg','Enter username and password', false); return; }
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('loginMsg', r.msg, false); return; }
+    onLoginSuccess(r);
+  }).withFailureHandler(function(e){
+    msg('loginMsg','Error: '+e.message, false);
+  }).login(u, p);
+}
+
+// Shared by both password login and OTP login once a valid session token comes back.
+function onLoginSuccess(r){
+  SESSION = r;
+  document.getElementById('loginView').classList.add('hide');
+  document.getElementById('otpLoginView').classList.add('hide');
+  document.getElementById('whoBox').textContent = r.name + ' (' + r.role + ')';
+  document.getElementById('logoutBtn').classList.remove('hide');
+  applyRoleVisibility(); // hide admin-only bits immediately, before any screen is shown
+  if(r.role === 'admin' || r.role === 'teacher'){ goHome(); }
+  else { initStudent(); }
+}
+
+// Hides everything admin-only up front, right at login, so a teacher never sees so much as a
+// flash of admin-only content before role-specific logic elsewhere gets a chance to run.
+function applyRoleVisibility(){
+  var isAdmin = SESSION && SESSION.role === 'admin';
+  ['marksHomeBtn','tabStudents','tabSubjects','tabLecturers','p_bulkWrap'].forEach(function(id){
+    var e=document.getElementById(id);
+    if(e) e.classList.toggle('hide', !isAdmin);
+  });
+}
+
+/* ---------- AUTH: Mobile OTP login (students) ---------- */
+function showOtpLogin(){
+  document.getElementById('loginView').classList.add('hide');
+  document.getElementById('otpLoginView').classList.remove('hide');
+  document.getElementById('otpStep1').classList.remove('hide');
+  document.getElementById('otpStep2').classList.add('hide');
+}
+function showPasswordLogin(){
+  document.getElementById('otpLoginView').classList.add('hide');
+  document.getElementById('loginView').classList.remove('hide');
+}
+
+var otpResendCooldown = false;
+
+function sendOtp(isResend){
+  var mobile = document.getElementById('otpMobile').value.trim();
+  if(!/^\d{10}$/.test(mobile)){ msg('otpMsg','Enter a valid 10-digit mobile number', false); return; }
+  if(otpResendCooldown){ msg('otpMsg','Please wait before requesting another OTP', false); return; }
+
+  var btn = document.getElementById('otpSendBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Sending...'; }
+
+  google.script.run.withSuccessHandler(function(r){
+    if(btn){ btn.disabled = false; btn.textContent = 'Send OTP'; }
+    if(!r.ok){ msg('otpMsg', r.msg, false); return; }
+    msg('otpMsg', r.msg, true);
+    document.getElementById('otpStep1').classList.add(isResend ? '' : 'hide');
+    document.getElementById('otpStep2').classList.remove('hide');
+    startOtpCooldown();
+  }).withFailureHandler(function(e){
+    if(btn){ btn.disabled = false; btn.textContent = 'Send OTP'; }
+    msg('otpMsg','Error: '+e.message, false);
+  }).requestOtp(mobile);
+}
+
+function startOtpCooldown(){
+  otpResendCooldown = true;
+  var link = document.getElementById('otpResendLink');
+  var seconds = 45;
+  link.textContent = 'Resend OTP in ' + seconds + 's';
+  var iv = setInterval(function(){
+    seconds--;
+    if(seconds <= 0){
+      clearInterval(iv);
+      otpResendCooldown = false;
+      link.textContent = 'Resend OTP';
+    } else {
+      link.textContent = 'Resend OTP in ' + seconds + 's';
+    }
+  }, 1000);
+}
+
+function verifyOtpAndLogin(){
+  var mobile = document.getElementById('otpMobile').value.trim();
+  var code = document.getElementById('otpCode').value.trim();
+  if(!/^\d{6}$/.test(code)){ msg('otpMsg','Enter the 6-digit OTP', false); return; }
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('otpMsg', r.msg, false); return; }
+    onLoginSuccess(r);
+  }).withFailureHandler(function(e){
+    msg('otpMsg','Error: '+e.message, false);
+  }).verifyOtp(mobile, code);
+}
+
+/* ---------- HOME MENU ---------- */
+function goHome(){
+  ['marksModule','attModule','studentView'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.add('hide'); });
+  document.getElementById('homeView').classList.remove('hide');
+  // PA Test Marks & Report Cards stays admin-only; teachers only get Student Attendance.
+  document.getElementById('marksHomeBtn').classList.toggle('hide', SESSION.role !== 'admin');
+}
+function openModule(which){
+  document.getElementById('homeView').classList.add('hide');
+  if(which==='marks'){
+    document.getElementById('marksModule').classList.remove('hide');
+    document.getElementById('marksAdminView').classList.remove('hide');
+    initAdmin();
+  } else {
+    document.getElementById('attModule').classList.remove('hide');
+    document.getElementById('attAppView').classList.remove('hide');
+    var isAdmin = SESSION.role === 'admin';
+    document.getElementById('tabStudents').classList.toggle('hide', !isAdmin);
+    document.getElementById('tabSubjects').classList.toggle('hide', !isAdmin);
+    document.getElementById('tabLecturers').classList.toggle('hide', !isAdmin);
+    att_initApp();
+  }
+}
+
+function doLogout(){
+  if(!confirm('Logout now?')) return;
+  SESSION = null;
+  ['homeView','marksModule','attModule','studentView'].forEach(function(id){ var e=document.getElementById(id); if(e) e.classList.add('hide'); });
+  document.getElementById('whoBox').textContent = '';
+  document.getElementById('logoutBtn').classList.add('hide');
+  document.getElementById('u').value = '';
+  document.getElementById('p').value = '';
+  document.getElementById('loginMsg').className = 'msg';
+  document.getElementById('loginView').classList.remove('hide');
+}
+
+/* ---------- STUDENT: own report card as PDF ---------- */
+function initStudent(){
+  document.getElementById('studentView').classList.remove('hide');
+  // --- attendance ---
+  document.getElementById('myAttArea').innerHTML='<p class="hint">Loading your attendance...</p>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ document.getElementById('myAttArea').innerHTML='<p class="msg err" style="display:block;">'+(r.msg||'Could not load attendance.')+'</p>'; return; }
+    att_renderMyAttendance(r);
+  }).withFailureHandler(function(e){ document.getElementById('myAttArea').innerHTML='<p class="msg err" style="display:block;">Error: '+e.message+'</p>'; })
+    .getMyAttendance(SESSION.token);
+  // --- report card ---
+  document.getElementById('myCardArea').innerHTML='<p class="hint">Preparing your report card...</p>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ document.getElementById('myCardArea').innerHTML='<p class="msg err" style="display:block;">'+(r.msg||'No report card available yet.')+'</p>'; return; }
+    document.getElementById('myCardArea').innerHTML=
+      '<div style="margin-bottom:10px;"><a href="'+r.url+'" target="_blank"><button>Open / Download PDF</button></a></div>'+
+      '<iframe src="'+(r.previewUrl||r.url)+'" style="width:100%;height:70vh;border:1px solid var(--line);border-radius:8px;"></iframe>';
+  }).withFailureHandler(function(e){ document.getElementById('myCardArea').innerHTML='<p class="msg err" style="display:block;">Error: '+e.message+'</p>'; })
+    .getMyReportCard(SESSION.token);
+}
+
+/* ---------- ADMIN ---------- */
+function showTab(name, btn){
+  ['students','report'].forEach(function(t){
+    document.getElementById('tab-'+t).classList.add('hide');
+  });
+  document.getElementById('tab-'+name).classList.remove('hide');
+  document.querySelectorAll('.tabs button').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+function initAdmin(){
+  document.getElementById('marksAdminView').classList.remove('hide');
+  loadClasses();
+  loadStudents();
+}
+
+function fillClassDropdowns(classes){
+  var opts = classes.map(function(c){ return '<option>'+c.className+'</option>'; }).join('');
+  ['rp_cl','imp_cl','ms_cl'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = opts;
+  });
+  var flt = document.getElementById('flt_cl');
+  if(flt){
+    var cur = flt.value;
+    flt.innerHTML = '<option value="">All classes</option>' + opts;
+    flt.value = cur; // keep current filter after refresh
+  }
+}
+
+function loadClasses(){
+  google.script.run.withSuccessHandler(function(rows){
+    fillClassDropdowns(rows);
+  }).listClasses(SESSION.token);
+}
+
+function quickAddClass(){
+  var name = prompt('New class name (e.g. CO-3-K):');
+  if(!name) return;
+  name = name.trim();
+  if(!name) return;
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ alert(r.msg || 'Could not add class'); return; }
+    loadClasses();
+    alert('Class "'+name+'" added.');
+  }).withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .addClass(SESSION.token, { className:name, description:'' });
+}
+
+// Add one student manually from the PA Test Marks module (same shared student list).
+function marksAddStudent(){
+  var s = {
+    rollNo:      document.getElementById('ms_roll').value.trim(),
+    enrollment:  document.getElementById('ms_enr').value.trim(),
+    name:        document.getElementById('ms_name').value.trim(),
+    className:   document.getElementById('ms_cl').value,
+    email:'', mobile:''
+  };
+  if(!s.rollNo || !s.enrollment || !s.name){ msg('msAddMsg','Roll No, Enrollment and Name are all required.', false); return; }
+  if(!s.className){ msg('msAddMsg','Please choose a class (use "+ Add Class" if the list is empty).', false); return; }
+  msg('msAddMsg','Adding...', true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('msAddMsg', r.msg || 'Could not add.', false); return; }
+    document.getElementById('msAddMsg').className = 'msg ok';
+    document.getElementById('msAddMsg').textContent = 'Student added to ' + s.className + ' (login created).';
+    document.getElementById('ms_roll').value = '';
+    document.getElementById('ms_enr').value = '';
+    document.getElementById('ms_name').value = '';
+    var flt = document.getElementById('flt_cl');
+    if(flt) flt.value = s.className;
+    loadStudents();
+  }).withFailureHandler(function(e){ msg('msAddMsg','Error: '+e.message, false); })
+    .addStudent(SESSION.token, s);
+}
+
+var STU_ROWS = [];
+function loadStudents(){
+  var flt = document.getElementById('flt_cl') ? document.getElementById('flt_cl').value : '';
+  google.script.run.withSuccessHandler(function(rows){
+    if(flt) rows = rows.filter(function(s){ return s.className === flt; });
+    STU_ROWS = rows;
+    var h='<table><tr>'+
+          '<th style="width:34px;text-align:center;"><input type="checkbox" id="chkAll" onclick="toggleAll(this)"></th>'+
+          '<th>Enroll</th><th>Name</th><th>Class</th><th>Roll</th><th></th></tr>';
+    if(!rows.length){
+      h+='<tr><td colspan="6" class="center">No students'+(flt?(' in '+flt):'')+' yet — import a class sheet above.</td></tr>';
+    }
+    rows.forEach(function(s){
+      var en=String(s.enrollment).replace(/"/g,'&quot;');
+      h+='<tr>'+
+         '<td style="text-align:center;"><input type="checkbox" class="stuChk" value="'+en+'"></td>'+
+         '<td>'+s.enrollment+'</td><td>'+s.name+'</td><td>'+s.className+'</td><td>'+(s.rollNo||'')+'</td>'+
+         '<td><button class="del" onclick="delStudent(\''+en+'\')">Delete</button></td></tr>';
+    });
+    document.getElementById('stuTable').innerHTML=h+'</table>';
+  }).listStudents(SESSION.token);
+}
+
+function toggleAll(box){
+  var all=document.querySelectorAll('.stuChk');
+  for(var i=0;i<all.length;i++) all[i].checked=box.checked;
+}
+
+function selectedEnrollments(){
+  var out=[], all=document.querySelectorAll('.stuChk');
+  for(var i=0;i<all.length;i++) if(all[i].checked) out.push(all[i].value);
+  return out;
+}
+
+function delStudent(en){
+  if(!confirm('Delete student '+en+'?')) return;
+  google.script.run.withSuccessHandler(loadStudents).deleteStudent(SESSION.token, en);
+}
+
+function deleteSelected(){
+  var list=selectedEnrollments();
+  if(!list.length){ msg('stuMsg2','Tick the students you want to delete first.',false); return; }
+  if(!confirm('Delete '+list.length+' selected student(s)? This also removes their logins and results.')) return;
+  msg('stuMsg2','Deleting '+list.length+' student(s)...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('stuMsg2',r.msg||'Delete failed',false); return; }
+    document.getElementById('stuMsg2').className='msg ok';
+    document.getElementById('stuMsg2').textContent='Deleted '+r.removed+' student(s).';
+    loadStudents();
+  }).withFailureHandler(function(e){ msg('stuMsg2','Error: '+e.message,false); })
+    .deleteStudentsBulk(SESSION.token, list);
+}
+
+function deleteWholeClass(){
+  var flt=document.getElementById('flt_cl').value;
+  if(!flt){ msg('stuMsg2','Pick a class in the "Filter by class" box first.',false); return; }
+  if(!confirm('Delete EVERY student in '+flt+'? This removes their logins and results too. This cannot be undone.')) return;
+  msg('stuMsg2','Deleting all students in '+flt+'...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('stuMsg2',r.msg||'Delete failed',false); return; }
+    document.getElementById('stuMsg2').className='msg ok';
+    document.getElementById('stuMsg2').textContent='Deleted '+r.removed+' student(s) from '+flt+'.';
+    loadStudents();
+  }).withFailureHandler(function(e){ msg('stuMsg2','Error: '+e.message,false); })
+    .deleteClassStudents(SESSION.token, flt);
+}
+
+/* ---------- REPORT CARDS (admin) ---------- */
+function genReport(){
+  var cl=document.getElementById('rp_cl').value;
+  var sem=document.getElementById('rp_sem').value.trim();
+  var ay=document.getElementById('rp_ay').value.trim();
+  var season=document.getElementById('rp_season').value;
+  if(!cl){msg('rpMsg','Select a class',false);return;}
+  msg('rpMsg','Generating report cards, please wait...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){msg('rpMsg',r.msg||'Error',false);return;}
+    document.getElementById('rpMsg').className='msg ok';
+    document.getElementById('rpMsg').innerHTML='PDF ready ('+r.count+' cards): '+
+      '<a href="'+r.url+'" target="_blank">'+r.name+'</a>';
+  }).withFailureHandler(function(e){
+    msg('rpMsg','Error: '+e.message,false);
+  }).generateResultPdf(SESSION.token, cl, sem, ay, season);
+}
+
+/* ---------- BULK IMPORT (admin) ---------- */
+function importFromFile(){
+  var f=document.getElementById('imp_file').files[0];
+  if(!f) return;
+  var cl=document.getElementById('imp_cl').value;
+  var ex=document.getElementById('imp_ex').value.trim()||'PAT-1';
+  if(!cl){ msg('impMsg','Select a class for this sheet first',false);
+           document.getElementById('imp_file').value=''; return; }
+  msg('impMsg','Uploading and importing "'+f.name+'"... please wait.',true);
+  var reader=new FileReader();
+  reader.onload=function(e){
+    // strip the "data:...;base64," prefix
+    var b64=String(e.target.result).split(',')[1];
+    google.script.run.withSuccessHandler(function(r){
+      if(!r.ok){ msg('impMsg',r.msg||'Import failed',false); return; }
+      document.getElementById('impMsg').className='msg ok';
+      document.getElementById('impMsg').innerHTML=
+        'Imported. Added: '+r.added+', updated: '+r.updated+', marks saved: '+r.marksSaved+
+        '.<br>Subjects detected: '+(r.subjects||[]).join(', ')+'.';
+      document.getElementById('imp_file').value='';
+      loadStudents();
+    }).withFailureHandler(function(err){
+      msg('impMsg','Error: '+err.message,false);
+    }).bulkImportFile(SESSION.token, {
+      base64:b64, fileName:f.name, mimeType:f.type,
+      className:cl, examName:ex
+    });
+  };
+  reader.onerror=function(){ msg('impMsg','Could not read the selected file.',false); };
+  reader.readAsDataURL(f);
+}
+
+
+/* ===== ATTENDANCE MODULE (namespaced att_) ===== */
+function att_todayStr(){var d=new Date();return d.toISOString().slice(0,10);}
+
+
+var LOGO='data:image/jpeg;base64,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';
+
+
+
+/* ---- AUTH ---- */
+
+function att_loadMyAttendance(){
+  document.getElementById('myAttArea').innerHTML='<p class="small-note">Loading your attendance...</p>';
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){document.getElementById('myAttArea').innerHTML='<p class="msg err" style="display:block;">'+(r.msg||'Could not load.')+'</p>';return;}
+    att_renderMyAttendance(r);
+  }).withFailureHandler(function(e){
+    document.getElementById('myAttArea').innerHTML='<p class="msg err" style="display:block;">Error: '+e.message+'</p>';
+  }).getMyAttendance(SESSION.token);
+}
+
+function att_renderMyAttendance(r){
+  var th=r.threshold;
+  var h='<div style="margin-bottom:10px;font-size:14px;">'
+       +'<b>'+r.name+'</b><br>Roll No: '+r.roll+' &nbsp;|&nbsp; Enrollment: '+r.enrollment
+       +(r.className?(' &nbsp;|&nbsp; Class: '+r.className):'')
+       +(r.batch?(' &nbsp;|&nbsp; Batch: '+r.batch):'')+'</div>';
+  // overall card
+  var hasTotal = r.overall.total>0;
+  var oLow = hasTotal && r.overall.pct<th;
+  h+='<div style="text-align:center;padding:16px;border-radius:12px;margin-bottom:14px;background:'+(oLow?'#341620':(hasTotal?'#0F2A22':'#131A2E'))+';border:1px solid '+(oLow?'#5E2233':(hasTotal?'#1E5A3F':'#2A3455'))+';">'
+   +'<div style="font-size:13px;color:#8D97BC;">Overall Attendance %</div>'
+   +'<div style="font-size:34px;font-weight:800;font-family:\'JetBrains Mono\',monospace;color:'+(oLow?'#FB7185':(hasTotal?'#34D399':'#8D97BC'))+';">'+(hasTotal? r.overall.pct+'%':'—')+'</div>'
+   +'<div style="font-size:12px;color:#8D97BC;">'+(hasTotal? ('Total Present '+r.overall.present+' out of '+r.overall.total+' lectures'):'Awaiting attendance totals')+'</div>'
+   +(oLow?'<div style="font-size:12px;color:#FB7185;font-weight:700;margin-top:4px;">Below '+th+'% — please improve your attendance.</div>':'')
+   +'</div>';
+
+  function tbl(title, list, withCode){
+    if(!list || !list.length) return '';
+    var t='<div style="font-weight:600;margin:10px 0 4px;">'+title+'</div>';
+    t+='<table class="reg"><tr><th style="text-align:left;">Subject</th><th>Present</th><th>Total</th><th>%</th></tr>';
+    list.forEach(function(s){
+      var hasTot=(s.total!==''&&s.total!==undefined&&Number(s.total)>0);
+      var low=hasTot && s.pct<th;
+      var label = withCode ? (s.key+' — '+s.name+' ('+s.code+')') : s.name;
+      t+='<tr'+(low?' class="low"':'')+'>'
+       +'<td class="nm">'+label+'</td>'
+       +'<td>'+(s.present===''?'-':s.present)+'</td><td>'+(s.total===''?'-':s.total)+'</td>'
+       +'<td'+(low?' class="low"':'')+'>'+(s.pct||s.pct===0? s.pct+'%':'-')+'</td></tr>';
+    });
+    return t+'</table>';
+  }
+
+  // Live app-tracked subjects (CO-5-K OSY/ACN/SPI)
+  h+=tbl('Attendance taken in app', r.liveSubjects, true);
+  // Uploaded summary subjects (other subjects / other classes)
+  h+=tbl('Attendance (uploaded by office)', r.uploadedSubjects, false);
+
+  h+='<p class="small-note" style="margin-top:10px;">This is a view-only summary of your own attendance. For corrections, contact your teacher or the office.</p>';
+  document.getElementById('myAttArea').innerHTML=h;
+}
+
+
+// Builds <optgroup> blocks per semester so subjects for different classes (e.g. CO-1-K, CO-5-K)
+// are visually grouped rather than shown as one flat list. Subjects with no semester set fall
+// into a plain, ungrouped bucket at the end.
+function att_buildSubjectOptions(list){
+  var groups={}; var order=[]; var plain='';
+  list.forEach(function(s){
+    var sem=s.semester;
+    if(!sem){ plain+='<option value="'+s.key+'">'+s.label+'</option>'; return; }
+    if(!groups[sem]){ groups[sem]=''; order.push(sem); }
+    groups[sem]+='<option value="'+s.key+'">'+s.label+'</option>';
+  });
+  var h=order.map(function(sem){ return '<optgroup label="'+sem+'">'+groups[sem]+'</optgroup>'; }).join('');
+  return h+plain;
+}
+
+function att_initApp(){
+  document.getElementById('t_date').value=att_todayStr();
+  google.script.run.withSuccessHandler(function(m){
+    ATT_META=m;
+    var allOpts=att_buildSubjectOptions(m.subjects);           // full list: Reports & Edit Sessions (oversight)
+    var takeOpts=att_buildSubjectOptions(m.takeSubjects||m.subjects); // narrower: Take Attendance & Plan
+    document.getElementById('t_sub').innerHTML=takeOpts;
+    document.getElementById('r_sub').innerHTML=allOpts;
+    document.getElementById('e_sub').innerHTML='<option value="ALL">All subjects</option>'+allOpts;
+    document.getElementById('p_sub').innerHTML=takeOpts;
+    att_onSubChange();
+    att_loadPlanList();
+    att_loadKnownBatches();
+  }).getAttMeta(SESSION.token);
+}
+
+// Populates the shared batch-name autocomplete list from whatever batch names actually exist
+// across all students — batches are free-form, so this just offers convenient suggestions.
+function att_loadKnownBatches(){
+  google.script.run.withSuccessHandler(function(list){
+    document.getElementById('knownBatches').innerHTML=(list||[]).map(function(b){return '<option value="'+b+'">';}).join('');
+  }).listBatchesInUse(SESSION.token, '');
+}
+
+function att_showTab(t){
+  ['take','report','edit','students','subjects','lecturers'].forEach(function(x){
+    document.getElementById(x+'Tab').classList.toggle('hide',x!==t);
+    document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===t);
+  });
+  if(t==='edit') att_loadSessions();
+  if(t==='students'){
+    att_fillClassDropdowns(att_loadBatchScreen);
+    att_loadSpiSelection();
+  }
+  if(t==='report'){
+    document.getElementById('r_from').value='';
+    document.getElementById('r_to').value='';
+  }
+  if(t==='subjects'){
+    att_loadSubjects();
+  }
+  if(t==='lecturers'){
+    att_loadTeachers();
+  }
+}
+
+/* ---- Students & Batches ---- */
+/* ---- Students & Batches ---- */
+var ATT_CLASSES=[];
+
+// Fill the three class dropdowns (upload, manual add, list filter) once.
+function att_fillClassDropdowns(cb){
+  google.script.run.withSuccessHandler(function(list){
+    ATT_CLASSES = list && list.length ? list : ['CO-5-K'];
+    var opts=ATT_CLASSES.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
+    ['su_class','ns_class','bl_class'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el && !el.options.length){ el.innerHTML=opts; el.value='CO-5-K'; }
+    });
+    att_onAddClassChange();
+    if(cb) cb();
+  }).withFailureHandler(function(){
+    ATT_CLASSES=['CO-5-K'];
+    if(cb) cb();
+  }).getClassList(SESSION.token);
+}
+
+// Batch names are free-form and can apply to any class with batch-wise practicals — the field
+// always shows; leave it blank for a class that doesn't use batches.
+function att_onAddClassChange(){
+  var wrap=document.getElementById('ns_batch_wrap');
+  if(wrap) wrap.style.display='';
+}
+
+function att_uploadStudents(){
+  var f=document.getElementById('su_file').files[0]; if(!f) return;
+  var cls=document.getElementById('su_class').value;
+  if(!confirm('This will update the '+cls+' student list (replacing existing '+cls+' students). Other classes are not affected. Continue?')){ document.getElementById('su_file').value=''; return; }
+  msg('suMsg','Uploading "'+f.name+'" for '+cls+'...',true);
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var b64=String(e.target.result).split(',')[1];
+    google.script.run.withSuccessHandler(function(r){
+      if(!r.ok){ msg('suMsg',r.msg||'Upload failed',false); return; }
+      document.getElementById('suMsg').className='msg ok';
+      document.getElementById('suMsg').textContent=cls+' updated: '+r.count+' students loaded ('+r.logins+' new logins). '+(r.kept||0)+' students of other classes left untouched.';
+      document.getElementById('su_file').value='';
+      document.getElementById('bl_class').value=cls;
+      att_loadBatchScreen();
+    }).withFailureHandler(function(err){ msg('suMsg','Error: '+err.message,false); })
+      .uploadStudentList(SESSION.token,{base64:b64,fileName:f.name,mimeType:f.type,className:cls});
+  };
+  reader.onerror=function(){ msg('suMsg','Could not read the file.',false); };
+  reader.readAsDataURL(f);
+}
+
+function att_loadBatchScreen(){
+  // load cutoffs
+  google.script.run.withSuccessHandler(function(c){
+    document.getElementById('cut_ab').value=c.ab;
+    document.getElementById('cut_bc').value=c.bc;
+  }).getBatchCutoffs(SESSION.token);
+  // load student list with batches
+  document.getElementById('batchList').innerHTML='<p class="hint">Loading...</p>';
+  google.script.run.withSuccessHandler(function(list){
+    var cls=document.getElementById('bl_class').value;
+    if(!list.length){ document.getElementById('batchList').innerHTML='<p class="hint">No students in '+cls+' yet — upload a list or add one manually above.</p>'; return; }
+    var h='<table class="reg"><tr><th>Roll</th><th style="text-align:left;">Name</th><th>Batch</th><th></th></tr>';
+    list.forEach(function(s){
+      var en=String(s.enrollment).replace(/'/g,"\\'");
+      h+='<tr id="strow_'+en+'"><td>'+s.roll+'</td><td class="nm">'+s.name+(s.manual?' <span title="manually set">★</span>':'')+'</td>'+
+         '<td><input list="knownBatches" value="'+s.batch+'" style="max-width:90px;" onchange="att_setBatch(\''+en+'\',this.value)"></td>'+
+         '<td style="white-space:nowrap;"><button class="small sec" onclick="att_editStudent(\''+en+'\',\''+String(s.roll).replace(/'/g,"\\'")+'\',\''+String(s.name).replace(/'/g,"\\'")+'\')">Edit</button> '+
+         '<button class="small" style="background:#c0392b;" onclick="att_removeStudent(\''+en+'\',\''+String(s.name).replace(/'/g,"\\'")+'\')">Remove</button></td></tr>';
+    });
+    document.getElementById('batchList').innerHTML='<div class="hint" style="margin-bottom:6px;">Showing <b>'+cls+'</b> — '+list.length+' student(s)</div>'+h+'</table>';
+    att_loadKnownBatches(); // refresh suggestions in case this class introduced new batch names
+  }).listStudentsWithBatch(SESSION.token, document.getElementById('bl_class').value);
+}
+
+function att_applyCutoffs(){
+  var ab=document.getElementById('cut_ab').value, bc=document.getElementById('cut_bc').value;
+  msg('cutMsg','Applying...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('cutMsg',r.msg||'Failed',false); return; }
+    // then auto-assign keeping manual overrides
+    google.script.run.withSuccessHandler(function(rr){
+      document.getElementById('cutMsg').className='msg ok';
+      document.getElementById('cutMsg').textContent='Cutoffs saved. '+(rr.changed||0)+' students re-assigned (manual overrides kept).';
+      att_loadBatchScreen();
+    }).autoAssignBatches(SESSION.token, true);
+  }).withFailureHandler(function(e){ msg('cutMsg','Error: '+e.message,false); })
+    .setBatchCutoffs(SESSION.token, ab, bc);
+}
+
+function att_setBatch(enrollment, batch){
+  google.script.run.withSuccessHandler(function(r){
+    if(r && r.ok) att_loadBatchScreen();
+  }).setStudentBatch(SESSION.token, enrollment, batch);
+}
+
+/* ---- Subjects (admin only, no hardcoding) ---- */
+function att_addSubject(){
+  var key=document.getElementById('as_key').value.trim();
+  var name=document.getElementById('as_name').value.trim();
+  var code=document.getElementById('as_code').value.trim();
+  var type=document.getElementById('as_type').value;
+  var sem=document.getElementById('as_sem').value.trim();
+  if(!key||!name){ msg('asMsg','Enter a subject key and name',false); return; }
+  msg('asMsg','Adding...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('asMsg', r.msg||'Failed',false); return; }
+    msg('asMsg','Subject added.',true);
+    document.getElementById('as_key').value='';
+    document.getElementById('as_name').value='';
+    document.getElementById('as_code').value='';
+    document.getElementById('as_sem').value='';
+    att_loadSubjects();
+  }).withFailureHandler(function(e){ msg('asMsg','Error: '+e.message,false); })
+    .addAttSubject(SESSION.token, key, name, code, type, sem);
+}
+
+function att_loadSubjects(){
+  document.getElementById('subjectList').innerHTML='<p class="hint">Loading...</p>';
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){ document.getElementById('subjectList').innerHTML='<p class="hint">No subjects added yet.</p>'; return; }
+    var h=list.map(function(s){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;'
+        +'border:1px solid var(--line-solid);border-radius:9px;margin-bottom:6px;background:var(--panel2);font-size:13px;">'
+        +'<div><b>'+s.subjectKey+'</b> — '+s.subjectName+(s.subjectCode?(' ('+s.subjectCode+')'):'')
+        +' · '+(s.type==='PR'?'Practical':'Theory')+(s.semester?(' · '+s.semester):'')+'</div>'
+        +'<button class="small sec" style="width:auto;" onclick="att_deleteSubject(\''+s.subjectKey+'\')">Remove</button>'
+        +'</div>';
+    }).join('');
+    document.getElementById('subjectList').innerHTML=h;
+  }).withFailureHandler(function(e){ document.getElementById('subjectList').innerHTML='<p class="hint">Error: '+e.message+'</p>'; })
+    .listAttSubjects(SESSION.token);
+}
+
+function att_deleteSubject(key){
+  if(!confirm('Remove subject '+key+'? This also clears any lecturer allotments for it. Past attendance records already taken for this subject are kept.')) return;
+  google.script.run.withSuccessHandler(function(){ att_loadSubjects(); })
+    .deleteAttSubject(SESSION.token, key);
+}
+
+/* ---- Lecturers & subject allotment (admin only) ---- */
+var ATT_SUBJECT_LIST=[]; // loaded live from the admin-managed AttendanceSubjects sheet, never hardcoded
+
+function att_addTeacher(){
+  var u=document.getElementById('lt_user').value.trim();
+  var p=document.getElementById('lt_pass').value;
+  var n=document.getElementById('lt_name').value.trim();
+  if(!u||!p||!n){ msg('ltMsg','Enter username, password and name',false); return; }
+  msg('ltMsg','Creating...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('ltMsg', r.msg||'Failed',false); return; }
+    msg('ltMsg','Lecturer created. Tick their subjects below.',true);
+    document.getElementById('lt_user').value='';
+    document.getElementById('lt_pass').value='';
+    document.getElementById('lt_name').value='';
+    att_loadTeachers();
+  }).withFailureHandler(function(e){ msg('ltMsg','Error: '+e.message,false); })
+    .createTeacher(SESSION.token, u, p, n);
+}
+
+function att_loadTeachers(){
+  document.getElementById('teacherList').innerHTML='<p class="hint">Loading...</p>';
+  google.script.run.withSuccessHandler(function(subs){
+    ATT_SUBJECT_LIST=subs||[];
+    att_renderTeacherList();
+  }).withFailureHandler(function(e){ document.getElementById('teacherList').innerHTML='<p class="hint">Error loading subjects: '+e.message+'</p>'; })
+    .listAttSubjects(SESSION.token);
+}
+
+function att_renderTeacherList(){
+  if(!ATT_SUBJECT_LIST.length){
+    document.getElementById('teacherList').innerHTML='<p class="hint">No subjects have been added yet — add subjects in the '
+      +'<b>Subjects</b> tab first, then come back here to allot teachers.</p>';
+    return;
+  }
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){ document.getElementById('teacherList').innerHTML='<p class="hint">No lecturers added yet.</p>'; return; }
+    var h=list.map(function(t){
+      var uid=t.username.replace(/[^a-zA-Z0-9]/g,'_');
+      var subBoxes=ATT_SUBJECT_LIST.map(function(sub){
+        var checked=t.subjects.indexOf(sub.subjectKey)>=0?'checked':'';
+        var label=sub.subjectKey+' — '+sub.subjectName+(sub.semester?(' ('+sub.semester+')'):'');
+        return '<label style="display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);">'
+          +'<input type="checkbox" class="tsub_'+uid+'" value="'+sub.subjectKey+'" '+checked+' style="width:auto;">'+label+'</label>';
+      }).join('');
+      return '<div style="padding:10px;border:1px solid var(--line-solid);border-radius:9px;margin-bottom:8px;background:var(--panel2);">'
+        +'<div style="font-weight:700;margin-bottom:6px;">'+t.name+' <span class="hint">('+t.username+')</span></div>'
+        +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">'+subBoxes+'</div>'
+        +'<div style="display:flex;gap:6px;">'
+        +'<button class="small" style="width:auto;" onclick="att_saveTeacherSubjects(\''+t.username+'\',\''+uid+'\')">Save Subjects</button>'
+        +'<button class="small sec" style="width:auto;" onclick="att_removeTeacher(\''+t.username+'\')">Remove Lecturer</button>'
+        +'</div></div>';
+    }).join('');
+    document.getElementById('teacherList').innerHTML=h;
+  }).withFailureHandler(function(e){ document.getElementById('teacherList').innerHTML='<p class="hint">Error: '+e.message+'</p>'; })
+    .listTeachers(SESSION.token);
+}
+
+function att_saveTeacherSubjects(username, uid){
+  var chosen=Array.prototype.slice.call(document.querySelectorAll('.tsub_'+uid+':checked')).map(function(el){return el.value;});
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ alert(r.msg||'Failed'); return; }
+    msg('ltMsg', username+'\'s subjects saved ('+r.count+' subject(s)).', true);
+  }).withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .setTeacherSubjects(SESSION.token, username, chosen);
+}
+
+function att_removeTeacher(username){
+  if(!confirm('Remove lecturer '+username+'? Their login will stop working.')) return;
+  google.script.run.withSuccessHandler(function(){ att_loadTeachers(); })
+    .deleteTeacher(SESSION.token, username);
+}
+
+/* ---- SPI eligibility (fixed subset of the class that takes SPI) ---- */
+function att_loadSpiSelection(){
+  document.getElementById('spiList').innerHTML='<p class="hint">Loading...</p>';
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){ document.getElementById('spiList').innerHTML='<p class="hint">No students found — upload or add students to CO-5-K first.</p>'; return; }
+    var h='<div class="hint" id="spiCount" style="margin-bottom:8px;font-weight:600;"></div>';
+    list.forEach(function(s){
+      var en=String(s.enrollment).replace(/"/g,'&quot;');
+      h+='<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line-solid);'
+        +'border-radius:8px;margin-bottom:6px;background:var(--panel2);cursor:pointer;">'
+        +'<input type="checkbox" class="spiChk" value="'+en+'" '+(s.spi?'checked':'')+' onchange="att_updateSpiCount()" style="width:auto;">'
+        +'<span style="font-family:\'JetBrains Mono\',monospace;min-width:28px;color:var(--muted);">'+s.roll+'</span>'
+        +'<span style="flex:1;">'+s.name+'</span></label>';
+    });
+    document.getElementById('spiList').innerHTML=h;
+    att_updateSpiCount();
+  }).withFailureHandler(function(e){ document.getElementById('spiList').innerHTML='<p class="hint">Error: '+e.message+'</p>'; })
+    .listSpiEligibility(SESSION.token);
+}
+function att_updateSpiCount(){
+  var n=document.querySelectorAll('.spiChk:checked').length;
+  var el=document.getElementById('spiCount');
+  if(el) el.textContent=n+' student(s) currently selected for SPI';
+}
+function att_saveSpiSelection(){
+  var chosen=Array.prototype.slice.call(document.querySelectorAll('.spiChk:checked')).map(function(el){return el.value;});
+  msg('spiMsg','Saving...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('spiMsg',r.msg||'Failed',false); return; }
+    msg('spiMsg', r.count+' student(s) set as SPI-eligible. This applies immediately to Take Attendance and Reports.', true);
+  }).withFailureHandler(function(e){ msg('spiMsg','Error: '+e.message,false); })
+    .saveSpiSelection(SESSION.token, chosen);
+}
+
+function att_addStudent(){
+  var s={
+    roll:document.getElementById('ns_roll').value,
+    enrollment:document.getElementById('ns_enr').value,
+    name:document.getElementById('ns_name').value,
+    className:document.getElementById('ns_class').value,
+    batch:document.getElementById('ns_batch').value
+  };
+  if(!s.roll||!s.enrollment||!s.name){ msg('nsMsg','Roll No, Enrollment and Name are all required.',false); return; }
+  msg('nsMsg','Adding...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('nsMsg',r.msg||'Could not add.',false); return; }
+    document.getElementById('nsMsg').className='msg ok';
+    document.getElementById('nsMsg').textContent='Student added to '+(r.className||s.className)+' (login created).';
+    document.getElementById('ns_roll').value=''; document.getElementById('ns_enr').value='';
+    document.getElementById('ns_name').value=''; document.getElementById('ns_batch').value='';
+    document.getElementById('bl_class').value = r.className || s.className;
+    att_loadBatchScreen();
+  }).withFailureHandler(function(e){ msg('nsMsg','Error: '+e.message,false); })
+    .attAddStudent(SESSION.token, s);
+}
+
+function att_editStudent(enrollment, curRoll, curName){
+  var newRoll=prompt('Roll No for '+curName+':', curRoll);
+  if(newRoll===null) return;
+  var newName=prompt('Name:', curName);
+  if(newName===null) return;
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ alert(r.msg||'Update failed'); return; }
+    att_loadBatchScreen();
+  }).withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .attUpdateStudent(SESSION.token, enrollment, {roll:newRoll, name:newName});
+}
+
+function att_removeStudent(enrollment, name){
+  if(!confirm('Remove '+name+'? This deletes the student and their login. Attendance already recorded stays in the sheet.')) return;
+  google.script.run.withSuccessHandler(function(r){
+    att_loadBatchScreen();
+  }).withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .deleteStudent(SESSION.token, enrollment);
+}
+
+/* ---- TAKE ---- */
+var ATT_PLAN_ID = null;
+function att_subType(key){var s=(ATT_META.subjects||[]).find(function(x){return x.key===key;});return s?s.type:'TH';}
+function att_isSPI(key){ return key==='SPI-PR'; }
+function att_onSubChange(){
+  var key=document.getElementById('t_sub').value;
+  var isPR=att_subType(key)==='PR';
+  // SPI is not batch-based (any 22-24 students per session), so hide the batch picker for it.
+  var showBatch = isPR && !att_isSPI(key);
+  document.getElementById('batchWrap').classList.toggle('hide',!showBatch);
+  ATT_PLAN_ID=null;
+  att_loadRoster();
+  att_loadPlanPicker();
+}
+function att_loadRoster(){
+  ATT_EDIT_SID=null;
+  var key=document.getElementById('t_sub').value;
+  var isPR=att_subType(key)==='PR';
+  var spi=att_isSPI(key);
+  var batch=(isPR && !spi)?document.getElementById('t_batch').value:'ALL';
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){
+      document.getElementById('rosterCard').style.display='none';
+      if(spi){
+        msg('takeMsg','No students are marked SPI-eligible yet. Go to Students & Batches → SPI Select Students to choose who takes SPI.',false);
+      } else if(isPR){
+        msg('takeMsg','No students found in Batch '+batch+'. Check Students & Batches → Batch Setup — students may not have a batch (A/B/C) assigned yet (click Apply Cutoffs there, or set each student\'s batch manually).',false);
+      } else {
+        msg('takeMsg','No students found for this class yet. Upload or add students under Students & Batches first.',false);
+      }
+      return;
+    }
+    // For SPI, start everyone ABSENT so the teacher just taps the ~22-24 who attended.
+    var def = spi ? 'A' : 'P';
+    ATT_ROSTER=list.map(function(s){s.status=def;return s;});
+    document.getElementById('t_topic').value='';
+    att_renderRoster();
+    document.getElementById('rosterCard').style.display='block';
+    document.getElementById('takeMsg').className='msg';
+    document.getElementById('takeMsg').textContent='';
+  }).withFailureHandler(function(e){msg('takeMsg','Error: '+e.message,false);})
+    .getStudentsFor(SESSION.token,key,batch);
+}
+
+/* ---- PLANNED DATES: picker on Take Attendance ---- */
+function att_loadPlanPicker(){
+  var key=document.getElementById('t_sub').value;
+  var wrap=document.getElementById('planPickerWrap');
+  if(!key){ wrap.classList.add('hide'); return; }
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){ wrap.classList.add('hide'); document.getElementById('planPicker').innerHTML=''; return; }
+    wrap.classList.remove('hide');
+    var today=new Date(); today.setHours(0,0,0,0);
+    var h=list.map(function(p){
+      var pd=new Date(p.date+'T00:00:00');
+      var overdue = pd<today;
+      var dl=p.date.split('-'); var disp=dl[2]+'/'+dl[1]+'/'+dl[0];
+      var row = '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;'
+        +'border:1px solid var(--line-solid);border-radius:8px;margin-bottom:6px;background:var(--panel2);'
+        +(overdue?'border-color:#5E4E1E;':'')+'">'
+        +'<div style="font-size:13px;"><b>'+disp+'</b>'+(p.time?(' · '+p.time):'')+(p.batch&&p.batch!=='SPI'?(' · Batch '+p.batch):'')
+        +(overdue?' <span style="color:#FBBF24;font-weight:700;">(overdue)</span>':'')+'</div>'
+        +'<div style="display:flex;gap:6px;">'
+        +'<button class="small" style="width:auto;" onclick="att_pickPlan(\''+p.planId+'\',\''+p.date+'\',\''+(p.time||'')+'\',\''+(p.batch||'')+'\')">Take Attendance</button>'
+        +'<button class="small sec" style="width:auto;" onclick="att_openSkip(\''+p.planId+'\')">Not Conducted</button>'
+        +'</div></div>';
+      var skipBox = '<div id="skipBox_'+p.planId+'" class="hide" style="margin:-2px 0 10px;padding:8px 10px;border:1px solid var(--line-solid);border-radius:8px;background:var(--panel2);">'
+        +'<label style="margin-top:0;">Reason lecture was not conducted</label>'
+        +'<select id="skipReason_'+p.planId+'"><option value="Leave">Leave</option><option value="Exchanged">Exchanged</option><option value="Holiday">Holiday</option><option value="Other">Other</option></select>'
+        +'<div style="margin-top:8px;display:flex;gap:6px;">'
+        +'<button class="small" style="width:auto;" onclick="att_confirmSkip(\''+p.planId+'\')">Confirm</button>'
+        +'<button class="small sec" style="width:auto;" onclick="document.getElementById(\'skipBox_'+p.planId+'\').classList.add(\'hide\')">Cancel</button>'
+        +'</div></div>';
+      return row+skipBox;
+    }).join('');
+    document.getElementById('planPicker').innerHTML=h;
+  }).withFailureHandler(function(e){ document.getElementById('planPicker').innerHTML='<p class="hint">Error: '+e.message+'</p>'; })
+    .listUpcomingPlans(SESSION.token, key);
+}
+function att_pickPlan(planId,date,time,batch){
+  ATT_PLAN_ID=planId;
+  document.getElementById('t_date').value=date;
+  document.getElementById('t_time').value=time;
+  var key=document.getElementById('t_sub').value;
+  var isPR=att_subType(key)==='PR' && !att_isSPI(key);
+  if(isPR && batch){
+    document.getElementById('t_batch').value=batch;
+    att_loadRoster();
+  }
+  msg('takeMsg','Planned date loaded below — mark attendance and Save.',true);
+}
+function att_openSkip(planId){
+  document.getElementById('skipBox_'+planId).classList.toggle('hide');
+}
+function att_confirmSkip(planId){
+  var reason=document.getElementById('skipReason_'+planId).value;
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ alert(r.msg||'Failed'); return; }
+    att_loadPlanPicker();
+    att_loadPlanList();
+  }).withFailureHandler(function(e){ alert('Error: '+e.message); })
+    .markPlanNotConducted(SESSION.token, planId, reason);
+}
+
+/* ---- PLANNED DATES: management card (fill timetable in advance) ---- */
+function att_loadPlanList(){
+  var key=document.getElementById('p_sub').value;
+  var isPR=att_subType(key)==='PR' && !att_isSPI(key);
+  document.getElementById('p_bulkBatchWrap').classList.toggle('hide',!isPR);
+  document.getElementById('p_oneBatchWrap').classList.toggle('hide',!isPR);
+  if(!key){ document.getElementById('planList').innerHTML='<p class="hint">Select a subject above.</p>'; return; }
+  document.getElementById('planList').innerHTML='<p class="hint">Loading...</p>';
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){ document.getElementById('planList').innerHTML='<p class="hint">No planned dates yet for this subject.</p>'; return; }
+    var h=list.map(function(p){
+      var dl=p.date.split('-'); var disp=dl[2]+'/'+dl[1]+'/'+dl[0];
+      var badge = p.status==='DONE' ? '<span style="color:#34D399;font-weight:700;">Done</span>'
+                : p.status==='SKIPPED' ? '<span style="color:#FBBF24;font-weight:700;">'+p.skipReason+'</span>'
+                : '<span style="color:var(--muted);">Pending</span>';
+      var delBtn = p.status==='PENDING' ? '<button class="small sec" style="width:auto;" onclick="att_delPlan(\''+p.planId+'\')">Remove</button>' : '';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;'
+        +'border:1px solid var(--line-solid);border-radius:8px;margin-bottom:5px;background:var(--panel2);font-size:13px;">'
+        +'<div>'+disp+(p.time?(' · '+p.time):'')+(p.batch&&p.batch!=='SPI'?(' · Batch '+p.batch):'')+' — '+badge+'</div>'
+        +delBtn+'</div>';
+    }).join('');
+    document.getElementById('planList').innerHTML=h;
+  }).withFailureHandler(function(e){ document.getElementById('planList').innerHTML='<p class="hint">Error: '+e.message+'</p>'; })
+    .listAllPlans(SESSION.token, key);
+}
+function att_delPlan(planId){
+  if(!confirm('Remove this planned date?')) return;
+  google.script.run.withSuccessHandler(function(){ att_loadPlanList(); att_loadPlanPicker(); })
+    .deletePlannedSession(SESSION.token, planId);
+}
+function att_toggleDayTime(cb){
+  var t=document.querySelector('.pwdTime[data-day="'+cb.value+'"]');
+  t.disabled=!cb.checked;
+  if(!cb.checked) t.value='';
+}
+function att_bulkPlan(){
+  var key=document.getElementById('p_sub').value;
+  if(!key){ msg('planMsg','Select a subject first',false); return; }
+  var dayTimes=[];
+  var missingTime=false;
+  document.querySelectorAll('.pwd:checked').forEach(function(cb){
+    var t=document.querySelector('.pwdTime[data-day="'+cb.value+'"]').value;
+    if(!t){ missingTime=true; }
+    dayTimes.push({day:cb.value, time:t});
+  });
+  var from=document.getElementById('p_bulkFrom').value, to=document.getElementById('p_bulkTo').value;
+  var isPR=att_subType(key)==='PR' && !att_isSPI(key);
+  var batch=isPR?document.getElementById('p_bulkBatch').value:(att_isSPI(key)?'SPI':'');
+  if(!dayTimes.length){ msg('planMsg','Select at least one weekday',false); return; }
+  if(missingTime){ msg('planMsg','Set a time for every weekday you selected',false); return; }
+  if(!from||!to){ msg('planMsg','Select From and To dates',false); return; }
+  msg('planMsg','Generating...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('planMsg',r.msg||'Failed',false); return; }
+    msg('planMsg','Added '+r.added+' planned date(s).',true);
+    att_loadPlanList();
+    if(key===document.getElementById('t_sub').value) att_loadPlanPicker();
+  }).withFailureHandler(function(e){ msg('planMsg','Error: '+e.message,false); })
+    .bulkPlanSessions(SESSION.token, key, dayTimes, batch, from, to);
+}
+function att_addOnePlan(){
+  var key=document.getElementById('p_sub').value;
+  if(!key){ msg('planMsg','Select a subject first',false); return; }
+  var date=document.getElementById('p_oneDate').value;
+  var time=document.getElementById('p_oneTime').value;
+  var isPR=att_subType(key)==='PR' && !att_isSPI(key);
+  var batch=isPR?document.getElementById('p_oneBatch').value:(att_isSPI(key)?'SPI':'');
+  if(!date){ msg('planMsg','Select a date',false); return; }
+  msg('planMsg','Adding...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){ msg('planMsg',r.msg||'Failed',false); return; }
+    msg('planMsg','Date added to the plan.',true);
+    document.getElementById('p_oneDate').value='';
+    document.getElementById('p_oneTime').value='';
+    att_loadPlanList();
+    if(key===document.getElementById('t_sub').value) att_loadPlanPicker();
+  }).withFailureHandler(function(e){ msg('planMsg','Error: '+e.message,false); })
+    .addPlannedSession(SESSION.token, key, date, time, batch);
+}
+function att_renderRoster(){
+  var present=ATT_ROSTER.filter(function(s){return s.status==='P';}).length;
+  var leave=ATT_ROSTER.filter(function(s){return s.status==='L';}).length;
+  var absent=ATT_ROSTER.length-present-leave;
+  var summary='Total '+ATT_ROSTER.length+'  |  Present '+present+'  |  Absent '+absent+'  |  Leave '+leave+'   (tap a name to cycle P → A → L)';
+  document.getElementById('rosterSummary').textContent=summary;
+  var h=ATT_ROSTER.map(function(s,i){
+    var cls=s.status==='A'?'absent':(s.status==='L'?'leave':'present');
+    var pill=s.status==='A'?'ABSENT':(s.status==='L'?'LEAVE':'PRESENT');
+    return '<div class="stu '+cls+'" onclick="att_toggle('+i+')">'+
+           '<div><span class="rl">'+s.roll+'</span><span class="nm">'+s.name+'</span></div>'+
+           '<div class="pill">'+pill+'</div></div>';
+  }).join('');
+  document.getElementById('roster').innerHTML=h;
+}
+function att_toggle(i){
+  var cur=ATT_ROSTER[i].status;
+  ATT_ROSTER[i].status = cur==='P' ? 'A' : (cur==='A' ? 'L' : 'P');
+  att_renderRoster();
+}
+function att_markAll(st){ATT_ROSTER.forEach(function(s){s.status=st;});att_renderRoster();}
+
+function att_saveAtt(){
+  var key=document.getElementById('t_sub').value;
+  var isPR=att_subType(key)==='PR';
+  var spi=att_isSPI(key);
+  var payload={
+    subject:key, date:document.getElementById('t_date').value,
+    time:document.getElementById('t_time').value,
+    batch:(isPR && !spi)?document.getElementById('t_batch').value:(spi?'SPI':''),
+    topic:document.getElementById('t_topic').value,
+    marks:ATT_ROSTER.map(function(s){return {roll:s.roll,status:s.status};}),
+    sessionId:ATT_EDIT_SID,
+    planId:ATT_PLAN_ID
+  };
+  if(!payload.date){msg('saveMsg','Please select a date',false);return;}
+  if(!payload.time){msg('saveMsg','Please select a time',false);return;}
+  if(!payload.topic.trim()){msg('saveMsg','Please enter the topic conducted',false);return;}
+  msg('saveMsg','Saving...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){msg('saveMsg',r.msg||'Save failed',false);return;}
+    document.getElementById('saveMsg').className='msg ok';
+    document.getElementById('saveMsg').textContent='Saved '+r.count+' records'+(ATT_EDIT_SID?' (updated)':'')+'.';
+    ATT_EDIT_SID=null;
+    ATT_PLAN_ID=null;
+    // Reset the whole form so it's ready for the next class's attendance.
+    document.getElementById('t_date').value='';
+    document.getElementById('t_time').value='';
+    document.getElementById('t_topic').value='';
+    ATT_ROSTER=[];
+    document.getElementById('rosterCard').style.display='none';
+    att_loadPlanPicker();
+    if(document.getElementById('p_sub').value===key) att_loadPlanList();
+  }).withFailureHandler(function(e){msg('saveMsg','Error: '+e.message,false);})
+    .saveAttendance(SESSION.token,payload);
+}
+
+/* ---- REPORTS ---- */
+function att_onReportSubChange(){
+  var key=document.getElementById('r_sub').value;
+  var isPR=att_subType(key)==='PR' && key!=='SPI-PR';
+  document.getElementById('r_batchWrap').classList.toggle('hide',!isPR);
+  document.getElementById('previewCard').style.display='none';
+  // Always start with no date range so a leftover From/To from a previous
+  // subject can never silently filter out a different subject's sessions.
+  document.getElementById('r_from').value='';
+  document.getElementById('r_to').value='';
+  if(isPR){
+    var subInfo=(ATT_META.subjects||[]).find(function(x){return x.key===key;});
+    google.script.run.withSuccessHandler(function(list){
+      var opts='<option value="ALL">All batches (combined)</option>'
+        +(list||[]).map(function(b){return '<option value="'+b+'">'+b+' batch</option>';}).join('');
+      document.getElementById('r_batch').innerHTML=opts;
+    }).listBatchesInUse(SESSION.token, subInfo?subInfo.semester:'');
+  }
+}
+function att_currentReportBatch(){
+  var wrap=document.getElementById('r_batchWrap');
+  if(wrap.classList.contains('hide')) return 'ALL';
+  return document.getElementById('r_batch').value;
+}
+function att_previewReport(){
+  var sub=document.getElementById('r_sub').value;
+  var batch=att_currentReportBatch();
+  msg('reportMsg','Loading...',true);
+  google.script.run.withSuccessHandler(function(reg){
+    document.getElementById('reportMsg').className='msg';document.getElementById('reportMsg').textContent='';
+    if(!reg || !reg.columns){msg('reportMsg','Could not load the register. Please try again.',false);
+      document.getElementById('previewCard').style.display='none';return;}
+    if(!reg.columns.length){msg('reportMsg','No sessions found for this subject/batch/date range.',false);
+      document.getElementById('previewCard').style.display='none';return;}
+    att_renderPreview(reg);
+  }).withFailureHandler(function(e){msg('reportMsg','Error: '+e.message,false);})
+    .getRegister(SESSION.token,sub,document.getElementById('r_from').value,document.getElementById('r_to').value,batch);
+}
+function att_renderPreview(reg){
+  var dl=function(d){var p=String(d).split('-');return p.length===3?p[2]+'/'+p[1]:d;};
+  var h='<div style="font-weight:600;margin-bottom:6px;">'+reg.subjectName+' ('+reg.code+') — '+reg.subject+(reg.batch&&reg.batch!=='ALL'?(' — Batch '+reg.batch):'')+'</div>';
+  h+='<table class="reg"><tr><th>Roll</th><th>Name</th>';
+  reg.columns.forEach(function(c){h+='<th>'+dl(c.date)+(c.batch?'<br>'+c.batch:'')+'</th>';});
+  h+='<th>P</th><th>Tot</th><th>%</th></tr>';
+  reg.rows.forEach(function(r){
+    var low=r.total>0&&r.pct<reg.threshold;
+    h+='<tr'+(low?' class="low"':'')+'><td>'+r.roll+'</td><td class="nm">'+r.name+'</td>';
+    r.cells.forEach(function(c){
+      var col=c==='A'?'color:#FB7185;font-weight:700;':(c==='P'?'color:#34D399;':(c==='L'?'color:#FBBF24;font-weight:700;':'color:#5C6890;'));
+      h+='<td style="'+col+'">'+(c||'-')+'</td>';
+    });
+    h+='<td>'+r.present+'</td><td>'+r.total+'</td><td'+(low?' class="low"':'')+'>'+r.pct+'</td></tr>';
+  });
+  h+='</table>';
+  // Topics conducted
+  var anyTopic=reg.columns.some(function(c){return c.topic;});
+  h+='<div style="font-weight:600;margin-top:14px;margin-bottom:4px;">Topic Conducted</div>';
+  h+='<table class="reg"><tr><th style="width:90px;">Date</th><th style="width:46px;">Batch</th><th style="text-align:left;">Topic</th></tr>';
+  reg.columns.forEach(function(c){
+    h+='<tr><td>'+dl(c.date)+'</td><td>'+(c.batch||'-')+'</td><td class="nm">'+(c.topic||'')+'</td></tr>';
+  });
+  h+='</table>';
+  if(!anyTopic) h+='<p class="small-note">No topics were entered for these sessions.</p>';
+  document.getElementById('previewArea').innerHTML=h;
+  document.getElementById('previewCard').style.display='block';
+}
+function att_dlPdf(def){
+  var sub=document.getElementById('r_sub').value;
+  var batch=att_currentReportBatch();
+  msg('reportMsg','Generating PDF...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){msg('reportMsg',r.msg,false);return;}
+    document.getElementById('reportMsg').className='msg ok';
+    document.getElementById('reportMsg').innerHTML='PDF ready: <a href="'+r.url+'" target="_blank">'+r.name+'</a>';
+  }).withFailureHandler(function(e){msg('reportMsg','Error: '+e.message,false);})
+    .generateReportPdf(SESSION.token,sub,document.getElementById('r_from').value,document.getElementById('r_to').value,def,batch,
+      Number(document.getElementById('r_colsPerPage').value)||10);
+}
+function att_dlExcel(){
+  var sub=document.getElementById('r_sub').value;
+  var batch=att_currentReportBatch();
+  msg('reportMsg','Generating Excel...',true);
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){msg('reportMsg',r.msg,false);return;}
+    document.getElementById('reportMsg').className='msg ok';
+    document.getElementById('reportMsg').innerHTML='Excel ready: <a href="'+r.url+'" target="_blank">'+r.name+'</a>';
+  }).withFailureHandler(function(e){msg('reportMsg','Error: '+e.message,false);})
+    .generateReportExcel(SESSION.token,sub,document.getElementById('r_from').value,document.getElementById('r_to').value,batch);
+}
+
+/* ---- EDIT PAST SESSIONS ---- */
+function att_loadSessions(){
+  var sub=document.getElementById('e_sub').value;
+  google.script.run.withSuccessHandler(function(list){
+    if(!list.length){document.getElementById('sessList').innerHTML='<p class="small-note">No sessions yet.</p>';return;}
+    var h=list.map(function(s){
+      return '<div class="sessrow"><div><b>'+s.subject+'</b> &middot; '+s.date+(s.time?(' '+s.time):'')+
+             (s.batch?(' &middot; Batch '+s.batch):'')+'</div>'+
+             '<div style="display:flex;gap:6px;"><button class="sec small" onclick="att_editSession(\''+s.sessionId+'\')">Edit</button>'+
+             '<button class="small" style="background:#c0392b;" onclick="att_delSession(\''+s.sessionId+'\')">Del</button></div></div>';
+    }).join('');
+    document.getElementById('sessList').innerHTML=h;
+  }).listSessions(SESSION.token,sub);
+}
+function att_editSession(sid){
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){msg('editMsg',r.msg,false);return;}
+    att_showTab('take');
+    document.getElementById('t_sub').value=r.session.subject;
+    att_onSubChange();
+    document.getElementById('t_date').value=r.session.date;
+    document.getElementById('t_time').value=r.session.time||'';
+    document.getElementById('t_topic').value=r.session.topic||'';
+    if(att_subType(r.session.subject)==='PR'&&r.session.batch) document.getElementById('t_batch').value=r.session.batch;
+    ATT_ROSTER=r.students.map(function(s){return {roll:s.roll,name:s.name,batch:s.batch,status:s.status};});
+    ATT_EDIT_SID=r.session.sessionId;
+    att_renderRoster();
+    document.getElementById('rosterCard').style.display='block';
+    msg('takeMsg','Editing session of '+r.session.date+'. Change marks and Save.',true);
+  }).getSession(SESSION.token,sid);
+}
+function att_delSession(sid){
+  if(!confirm('Delete this attendance session permanently?'))return;
+  google.script.run.withSuccessHandler(function(){att_loadSessions();}).deleteSession(SESSION.token,sid);
+}
+
+</script>
+</body>
+</html>
